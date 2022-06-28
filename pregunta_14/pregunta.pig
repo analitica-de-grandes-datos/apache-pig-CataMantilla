@@ -30,6 +30,6 @@ table_1 = LOAD 'data.csv' USING PigStorage(',')
         );
 
 table_2 = FOREACH table_1 GENERATE color;
-table_3 = FILTER table_2 BY (color != '.*^b.*');
+table_3 = FILTER table_2 BY NOT(color matches '.*^b.*');
 STORE table_3 INTO 'output' USING PigStorage(',');
 
