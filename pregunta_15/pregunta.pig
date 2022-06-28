@@ -31,4 +31,4 @@ table_1 = LOAD 'data.csv' USING PigStorage(',')
 
 table_2 = FOREACH table_1 GENERATE firstname, color;
 table_3 = FILTER table_2 BY (color == 'blue') AND (firstname matches '.*^Z.*');
-STORE table_3 INTO 'output' USING PigStorage(',');
+STORE table_3 INTO 'output' USING PigStorage(' ');
