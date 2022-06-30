@@ -33,4 +33,26 @@ $ pig -x local -f pregunta.pig
 
         >>> Escriba su respuesta a partir de este punto <<<
 */
+table_1 = LOAD 'data.csv' USING PigStorage(',')
+        AS (
+                id:INT,
+                firstname:CHARARRAY,
+                lastname:CHARARRAY,
+                birth:CHARARRAY,
+                color:CHARARRAY,
+                number:INT
+        );
+table_2 = FOREACH table_1 GENERATE ToDate(birth, 'yyyy-MM-dd') AS fecha;
+table_3 = FOREACH table_2 GENERATE ToString(fecha, 'yyyy-MM-dd') AS fecha_1,
+                                   ToString(fecha, 'dd') AS day,
+                                   ToString(fecha, 'd') AS day_1,
+                                   LOWER(ToString(fecha, 'EEEE')) AS dia,
+                                   LOWER(ToString(fecha, 'E')) AS small_day;
 
+table_4 = FOREACH table_3 GENERATE fecha_1, day, day_1, REPLACE(small_day, 'thu', 'jue') AS small_day, REPLACE(dia, 'thursday', 'jueves') AS dia;
+table_4 = FOREACH table_4 GENERATE fecha_1, day, day_1, REPLACE(small_day, 'sun', 'dom') AS small_day, REPLACE(dia, 'sunday', 'domingo') AS dia;
+table_4 = FOREACH table_4 GENERATE fecha_1, day, day_1, REPLACE(small_day, 'fri', 'vie') AS small_day, REPLACE(dia, 'friday', 'viernes') AS dia;
+table_4 = FOREACH table_4 GENERATE fecha_1, day, day_1, REPLACE(small_day, 'mon', 'lun') AS small_day, REPLACE(dia, 'monday', 'lunes') AS dia;
+table_4 = FOREACH table_4 GENERATE fecha_1, day, day_1, REPLACE(small_day, 'tue', 'mar') AS small_day, REPLACE(dia, 'tuesday', 'martes') AS dia;
+table_4 = FOREACH table_4 GENERATE fecha_1, day, day_1, REPLACE(small_day, 'wed', 'mie') AS small_day, REPLACE(dia, 'wednesday', 'miercoles') AS dia;
+STORE table_4 INTO 'output' USING PigStorage(',');
